@@ -4,11 +4,17 @@ import React from 'react';
 const LoginScreen = () => {
   return (
     <View>
-      <Text>LoginScreen</Text>
+      <Text style={styles.text}>LoginScreen</Text>
     </View>
   );
 };
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'PlusJakartaSans-Regular',
+    // fontWeight: '700',
+    fontSize: 20,
+  },
+});
