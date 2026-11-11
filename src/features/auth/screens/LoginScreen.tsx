@@ -11,6 +11,7 @@ import { COLORS } from '../../../shared/utils/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LucideIcon from '@react-native-vector-icons/lucide';
 import Chip from '../components/Chip';
+import { navigate } from '../../../shared/utils/navigation';
 
 const LoginScreen = () => {
   const [mobileNumber, setMobileNumber] = useState<string>('');
@@ -19,7 +20,10 @@ const LoginScreen = () => {
     setMobileNumber(text);
   };
 
-  const handleContinue = () => {};
+  const handleContinue = () => {
+    if (!mobileNumber || mobileNumber.length !== 10) return;
+    navigate('otp', { mobileNumber });
+  };
 
   return (
     <View style={styles.container}>
@@ -87,7 +91,10 @@ const LoginScreen = () => {
               onChangeText={handleMobileNumberChange}
             />
           </View>
-          <TouchableOpacity style={[styles.continueButton, styles.button]}>
+          <TouchableOpacity
+            onPress={handleContinue}
+            style={[styles.continueButton, styles.button]}
+          >
             <Text style={styles.continueButtonText}>Continue</Text>
           </TouchableOpacity>
           <View style={styles.hrContainer}>
