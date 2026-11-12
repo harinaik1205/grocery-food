@@ -4,18 +4,57 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextInputKeyPressEvent,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentRef,
+} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FeatherIcon from '@react-native-vector-icons/feather';
 import { COLORS } from '../../../shared/utils/constants';
 import { goBack } from '../../../shared/utils/navigation';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+
+type TextInputType = ComponentRef<typeof TextInput>;
+
 const OtpScreen = () => {
   const route = useRoute();
+  const [otp, setOtp] = useState<string[]>([]);
+
+  const otpRefs = useRef<(TextInputType | null)[]>([]);
+
+  useEffect(() => {
+    otpRefs.current[0]?.focus();
+  }, []);
+  const handleChange = (text: string, index: number) => {
+    if (isNaN(Number(text))) return;
+    const newOtp = [...otp];
+    newOtp[index] = text[text.length - 1];
+    setOtp(newOtp);
+    if (text && !otp[index + 1] && otpRefs.current[index + 1]) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (e: TextInputKeyPressEvent, index: number) => {
+    const newOtp = [...otp];
+    if (e.nativeEvent.key === 'Backspace') {
+      newOtp[index] = '';
+      setOtp(newOtp);
+
+      if (index > 0) {
+        otpRefs?.current[index - 1]?.focus();
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -60,9 +99,26 @@ const OtpScreen = () => {
           <View style={styles.otpInputContainer}>
             {[1, 2, 3, 4, 5, 6].map((_, index) => {
               return (
-                <View style={[styles.otpInput]} key={index}>
-                  <TextInput style={styles.input} />
-                </View>
+                // <View style={[styles.otpInput]} key={index}>
+                <TextInput
+                  key={index}
+                  ref={ref => {
+                    otpRefs.current[index] = ref;
+                  }}
+                  value={otp[index]}
+                  onChangeText={text => handleChange(text, index)}
+                  onKeyPress={e => handleKeyPress(e, index)}
+                  keyboardType="phone-pad"
+                  style={[
+                    styles.input,
+                    styles.otpInput,
+                    otp[index] && styles.activeOtpInput,
+                  ]}
+                  cursorColor={COLORS.brand}
+                  caretHidden={false}
+                  selectionColor={COLORS.brand}
+                />
+                // </View>
               );
             })}
           </View>
@@ -163,16 +219,17 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: COLORS.border,
-    justifyContent: 'center',
-    alignItems: 'center',
+    textAlign: 'center',
     backgroundColor: '#fff',
   },
   input: {
     fontSize: 24,
+    color: COLORS.ink,
     fontFamily: 'PlusJakartaSans-ExtraBold',
   },
 
   activeOtpInput: {
+    borderWidth: 2,
     borderColor: COLORS.brand,
   },
   resendCodeText: {
