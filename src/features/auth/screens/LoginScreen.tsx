@@ -1,12 +1,13 @@
 import {
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { COLORS } from '../../../shared/utils/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LucideIcon from '@react-native-vector-icons/lucide';
@@ -15,6 +16,12 @@ import { navigate } from '../../../shared/utils/navigation';
 
 const LoginScreen = () => {
   const [mobileNumber, setMobileNumber] = useState<string>('');
+
+  useEffect(() => {
+    if (mobileNumber.length === 10) {
+      Keyboard.dismiss();
+    }
+  }, [mobileNumber]);
 
   const handleMobileNumberChange = (text: string) => {
     setMobileNumber(text);
@@ -88,7 +95,9 @@ const LoginScreen = () => {
               keyboardType="phone-pad"
               maxLength={10}
               value={mobileNumber}
+              cursorColor={COLORS.brand}
               onChangeText={handleMobileNumberChange}
+              placeholderTextColor={COLORS.muted}
             />
           </View>
           <TouchableOpacity

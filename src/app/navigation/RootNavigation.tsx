@@ -1,5 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginScreen, OtpScreen } from '../../features/auth/screens';
+import {
+  LoginScreen,
+  OtpScreen,
+  SplashScreen,
+} from '../../features/auth/screens';
 import VerticalRouter from './VerticalRouter';
 
 const Stack = createNativeStackNavigator();
@@ -11,6 +15,7 @@ function RootStack() {
         headerShown: false,
       }}
     >
+      <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="otp" component={OtpScreen} />
       <Stack.Screen name="vertical" component={VerticalRouter} />
