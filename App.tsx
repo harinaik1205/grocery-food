@@ -14,6 +14,8 @@ import {
 } from 'react-native-safe-area-context';
 import { RootStack } from './src/app/navigation';
 import { navigationRef } from './src/shared/utils/navigation';
+import { Provider } from 'react-redux';
+import { store } from './src/store';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,7 +25,9 @@ function App() {
       <SafeAreaProvider>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         {/* <AppContent /> */}
-        <RootStack />
+        <Provider store={store}>
+          <RootStack />
+        </Provider>
       </SafeAreaProvider>
     </NavigationContainer>
   );

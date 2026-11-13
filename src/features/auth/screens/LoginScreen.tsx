@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   Keyboard,
   StyleSheet,
@@ -12,25 +13,60 @@ import { COLORS } from '../../../shared/utils/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LucideIcon from '@react-native-vector-icons/lucide';
 import Chip from '../components/Chip';
-import { navigate } from '../../../shared/utils/navigation';
+import { navigate, replace } from '../../../shared/utils/navigation';
+import {
+  ConfirmationResult,
+  getAuth,
+  onAuthStateChanged,
+  signInWithPhoneNumber,
+} from '@react-native-firebase/auth';
+import { mmkvStorage } from '../../../shared/utils/storage';
 
 const LoginScreen = () => {
-  const [mobileNumber, setMobileNumber] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [isSendingOtp, setIsSendingOtp] = useState<boolean>(false);
+  const [confirm, setConfirm] = useState<ConfirmationResult | null>(null);
 
   useEffect(() => {
-    if (mobileNumber.length === 10) {
+    const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  useEffect(() => {
+    if (phoneNumber.length === 10) {
       Keyboard.dismiss();
     }
-  }, [mobileNumber]);
+  }, [phoneNumber]);
 
-  const handleMobileNumberChange = (text: string) => {
-    setMobileNumber(text);
+  function handleAuthStateChanged(user: any) {
+    if (user) {
+      mmkvStorage.setItem('user', JSON.stringify(user));
+      replace('vertical');
+      // Some Android devices auto-retrieve the SMS code and complete sign-in
+      // without the user typing it. Hide the code UI and navigate away when
+      // this fires; entering the same code again will fail because it was used.
+    }
+  }
+
+  async function handleSignInWithPhoneNumber() {
+    if (!phoneNumber || phoneNumber.length !== 10) return;
+
+    const confirmation = await signInWithPhoneNumber(
+      getAuth(),
+      `+91${phoneNumber}`,
+    );
+    setConfirm(confirmation);
+    console.log('confirmation', confirmation);
+    navigate('otp', { phoneNumber, confirm: confirmation });
+  }
+
+  const handleChange = (text: string) => {
+    setPhoneNumber(text);
   };
 
-  const handleContinue = () => {
-    if (!mobileNumber || mobileNumber.length !== 10) return;
-    navigate('otp', { mobileNumber });
-  };
+  // const handleContinue = () => {
+
+  // };
 
   return (
     <View style={styles.container}>
@@ -94,17 +130,22 @@ const LoginScreen = () => {
               placeholder="Enter your mobile number"
               keyboardType="phone-pad"
               maxLength={10}
-              value={mobileNumber}
+              value={phoneNumber}
               cursorColor={COLORS.brand}
-              onChangeText={handleMobileNumberChange}
+              onChangeText={handleChange}
               placeholderTextColor={COLORS.muted}
             />
           </View>
           <TouchableOpacity
-            onPress={handleContinue}
+            onPress={handleSignInWithPhoneNumber}
+            disabled={isSendingOtp}
             style={[styles.continueButton, styles.button]}
           >
-            <Text style={styles.continueButtonText}>Continue</Text>
+            {isSendingOtp ? (
+              <ActivityIndicator size={'small'} color={COLORS.white} />
+            ) : (
+              <Text style={styles.continueButtonText}>Continue</Text>
+            )}
           </TouchableOpacity>
           <View style={styles.hrContainer}>
             <View style={styles.hrLine} />

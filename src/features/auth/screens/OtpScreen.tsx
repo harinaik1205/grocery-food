@@ -1,4 +1,6 @@
 import {
+  ActivityIndicator,
+  Alert,
   Image,
   Pressable,
   StyleSheet,
@@ -21,12 +23,16 @@ import { COLORS } from '../../../shared/utils/constants';
 import { goBack } from '../../../shared/utils/navigation';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { ConfirmationResult } from '@react-native-firebase/auth';
 
 type TextInputType = ComponentRef<typeof TextInput>;
 
 const OtpScreen = () => {
   const route = useRoute();
+  const confirm = route?.params?.confirm as ConfirmationResult;
+
   const [otp, setOtp] = useState<string[]>([]);
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
 
   const otpRefs = useRef<(TextInputType | null)[]>([]);
 
@@ -54,6 +60,18 @@ const OtpScreen = () => {
       }
     }
   };
+
+  async function handleVerifyOtp() {
+    setIsVerifying(true);
+    try {
+      await confirm.confirm(otp.join(''));
+    } catch (error: any) {
+      console.log('Invalid code.', error);
+      Alert.alert(JSON.stringify(error));
+    } finally {
+      setIsVerifying(false);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -89,7 +107,7 @@ const OtpScreen = () => {
             }}
           >
             <Text style={styles.phoneNumber}>
-              +91{route.params?.mobileNumber}
+              +91{route.params?.phoneNumber}
             </Text>
             <Pressable>
               <Text style={styles.editButton}>Edit</Text>
@@ -128,10 +146,15 @@ const OtpScreen = () => {
           </Text>
 
           <TouchableOpacity
-            // onPress={handleContinue}
+            onPress={handleVerifyOtp}
+            disabled={isVerifying}
             style={[styles.continueButton, styles.button]}
           >
-            <Text style={styles.continueButtonText}>Verify & continue</Text>
+            {isVerifying ? (
+              <ActivityIndicator size={'small'} color={COLORS.white} />
+            ) : (
+              <Text style={styles.continueButtonText}>Verify & continue</Text>
+            )}
           </TouchableOpacity>
         </View>
       </SafeAreaView>

@@ -1,10 +1,12 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { COLORS } from '../../../shared/utils/constants';
 import { navigate, replace } from '../../../shared/utils/navigation';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
+import { mmkvStorage } from '../../../shared/utils/storage';
 
 const SplashScreen = () => {
-  let user = null;
+  let user = mmkvStorage.getItem('user');
   const handleNavigation = () => {
     if (user) {
       replace('vertical');
