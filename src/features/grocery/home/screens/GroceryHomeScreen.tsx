@@ -1,15 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { mmkvStorage } from '../../../../shared/utils/storage';
+import Header from '../../../../shared/components/Header';
 
 const GroceryHomeScreen = () => {
   const user = JSON.parse(mmkvStorage.getItem('user')!);
   return (
-    <View>
-      <SafeAreaView>
-        <Text>{user?.phoneNumber}</Text>
-      </SafeAreaView>
+    <View style={{ flex: 1 }}>
+      <Header />
     </View>
   );
 };
