@@ -1,5 +1,5 @@
-import GroceryNavigation from '../navigation/GroceryNavigation';
-import RestaurantNavigation from '../navigation/RestaurantNavigation';
+import GroceryNavigation from '../navigation/grocery/GroceryNavigation';
+import RestaurantNavigation from '../navigation/restaurant/RestaurantNavigation';
 
 export const verticalRegistry = {
   grocery: {

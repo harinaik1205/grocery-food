@@ -11,3 +11,13 @@ export const COLORS = {
   divider: '#E7DED6',
   overlay: 'rgba(255, 255, 255, 0.08)',
 } as const;
+
+export const FONTS = {
+  bold: 'PlusJakartaSans-Bold',
+  extraBold: 'PlusJakartaSans-ExtraBold',
+  extraLight: 'PlusJakartaSans-ExtraLight',
+  light: 'PlusJakartaSans-Light',
+  medium: 'PlusJakartaSans-Medium',
+  regular: 'PlusJakartaSans-Regular',
+  semiBold: 'PlusJakartaSans-SemiBold',
+};
