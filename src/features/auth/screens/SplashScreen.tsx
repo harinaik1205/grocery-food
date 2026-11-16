@@ -1,14 +1,47 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { COLORS } from '../../../shared/utils/constants';
-import { navigate, replace } from '../../../shared/utils/navigation';
+import {
+  navigate,
+  replace,
+  resetAndNavigate,
+} from '../../../shared/utils/navigation';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { mmkvStorage } from '../../../shared/utils/storage';
+import { useAppDispatch } from '../../../store/hooks';
+import { setUser } from '../store/authSlice';
 
 const SplashScreen = () => {
-  let user = mmkvStorage.getItem('user');
+  // let user = mmkvStorage.getItem('user');
+  const [userData, setUserData] = useState(() => {
+    return mmkvStorage.getItem('user');
+  });
+  const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
+  //   return subscriber;
+  // }, []);
+
+  // function handleAuthStateChanged(user: any) {
+  //   if (user) {
+  //     mmkvStorage.setItem('user', JSON.stringify(user));
+  //     setUserData(user);
+  //     // dispatch(setUser(JSON.parse(JSON.stringify(user))));
+  //     replace('vertical');
+  //     console.log('auth state changed');
+  //     // Some Android devices auto-retrieve the SMS code and complete sign-in
+  //     // without the user typing it. Hide the code UI and navigate away when
+  //     // this fires; entering the same code again will fail because it was used.
+  //   } else {
+  //     // setUserData(null);
+  //     // dispatch(setUser(null));
+  //     // resetAndNavigate('login');
+  //   }
+  // }
+
   const handleNavigation = () => {
-    if (user) {
+    if (userData) {
       replace('vertical');
     } else {
       navigate('login');

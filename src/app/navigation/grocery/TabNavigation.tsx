@@ -42,6 +42,7 @@ const CustomTabBar = (props: BottomTabBarProps) => {
             const isFocused = state.index === index;
             return (
               <Pressable
+                key={index}
                 onPress={() => handlePress(route.name)}
                 style={[
                   styles.tabItem,

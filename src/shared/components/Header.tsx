@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import VerticalTabs from './VerticalTabs';
 
 import Lucide from '@react-native-vector-icons/lucide';
+import SearchBar from './SearchBar';
 
 const Header = () => {
   const insets = useSafeAreaInsets();
@@ -32,6 +33,14 @@ const Header = () => {
           </View>
         </View>
       </View>
+      {/* <View style={[styles.headerBody, { alignItems: 'center' }]}>
+        <Pressable style={[styles.searchBar]}>
+          <View style={styles.flexRow}>
+            <Lucide name="search" size={20} color={COLORS.ink} />
+          </View>
+        </Pressable>
+      </View> */}
+      <SearchBar />
     </View>
   );
 };
@@ -43,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#A82A12',
   },
   headerBody: {
-    paddingBottom: 10,
+    // paddingBottom: 10,
     backgroundColor: COLORS.brand,
   },
   flexRow: {
@@ -91,5 +100,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONTS.extraBold,
     color: COLORS.ink,
+  },
+  searchWrap: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchBar: {
+    height: 52,
+    width: '95%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 26,
+    backgroundColor: COLORS.white,
   },
 });

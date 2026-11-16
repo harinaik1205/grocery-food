@@ -21,16 +21,20 @@ import {
   signInWithPhoneNumber,
 } from '@react-native-firebase/auth';
 import { mmkvStorage } from '../../../shared/utils/storage';
+import { useAppDispatch } from '../../../store/hooks';
+// import { setConfirmation } from '../store/authSlice';
 
 const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isSendingOtp, setIsSendingOtp] = useState<boolean>(false);
-  const [confirm, setConfirm] = useState<ConfirmationResult | null>(null);
+  // const [confirm, setConfirm] = useState<ConfirmationResult | null>(null);
 
-  useEffect(() => {
-    const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
-    return subscriber;
-  }, []);
+  const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
+  //   return subscriber;
+  // }, []);
 
   useEffect(() => {
     if (phoneNumber.length === 10) {
@@ -38,26 +42,34 @@ const LoginScreen = () => {
     }
   }, [phoneNumber]);
 
-  function handleAuthStateChanged(user: any) {
-    if (user) {
-      mmkvStorage.setItem('user', JSON.stringify(user));
-      replace('vertical');
-      // Some Android devices auto-retrieve the SMS code and complete sign-in
-      // without the user typing it. Hide the code UI and navigate away when
-      // this fires; entering the same code again will fail because it was used.
-    }
-  }
+  // function handleAuthStateChanged(user: any) {
+  //   if (user) {
+  //     mmkvStorage.setItem('user', JSON.stringify(user));
+  //     replace('vertical');
+  //     console.log('auth state changed');
+  //     // Some Android devices auto-retrieve the SMS code and complete sign-in
+  //     // without the user typing it. Hide the code UI and navigate away when
+  //     // this fires; entering the same code again will fail because it was used.
+  //   }
+  // }
 
   async function handleSignInWithPhoneNumber() {
     if (!phoneNumber || phoneNumber.length !== 10) return;
-
-    const confirmation = await signInWithPhoneNumber(
-      getAuth(),
-      `+91${phoneNumber}`,
-    );
-    setConfirm(confirmation);
-    console.log('confirmation', confirmation);
-    navigate('otp', { phoneNumber, confirm: confirmation });
+    setIsSendingOtp(true);
+    try {
+      const confirmation = await signInWithPhoneNumber(
+        getAuth(),
+        `+91${phoneNumber}`,
+      );
+      // dispatch(setConfirmation(confirmation));
+      // setConfirmation(confirmation)
+      console.log('confirmation', confirmation);
+      navigate('otp', { phoneNumber, confirmation });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSendingOtp(false);
+    }
   }
 
   const handleChange = (text: string) => {

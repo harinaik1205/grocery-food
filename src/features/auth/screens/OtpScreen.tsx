@@ -20,16 +20,22 @@ import React, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FeatherIcon from '@react-native-vector-icons/feather';
 import { COLORS } from '../../../shared/utils/constants';
-import { goBack } from '../../../shared/utils/navigation';
+import { goBack, replace } from '../../../shared/utils/navigation';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { ConfirmationResult } from '@react-native-firebase/auth';
+import { useAppSelector } from '../../../store/hooks';
+import { mmkvStorage } from '../../../shared/utils/storage';
 
 type TextInputType = ComponentRef<typeof TextInput>;
 
 const OtpScreen = () => {
   const route = useRoute();
-  const confirm = route?.params?.confirm as ConfirmationResult;
+  const params = route.params as {
+    phoneNumber: string;
+    confirmation: ConfirmationResult;
+  };
+  const confirmation = params.confirmation;
 
   const [otp, setOtp] = useState<string[]>([]);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
@@ -64,7 +70,12 @@ const OtpScreen = () => {
   async function handleVerifyOtp() {
     setIsVerifying(true);
     try {
-      await confirm.confirm(otp.join(''));
+      if (confirmation) {
+        const response = await confirmation.confirm(otp.join(''));
+        console.log('user', response);
+        // mmkvStorage.setItem('user', JSON.stringify(response));
+        // replace('vertical');
+      }
     } catch (error: any) {
       console.log('Invalid code.', error);
       Alert.alert(JSON.stringify(error));
@@ -106,9 +117,7 @@ const OtpScreen = () => {
               gap: 5,
             }}
           >
-            <Text style={styles.phoneNumber}>
-              +91{route.params?.phoneNumber}
-            </Text>
+            <Text style={styles.phoneNumber}>+91{params.phoneNumber}</Text>
             <Pressable>
               <Text style={styles.editButton}>Edit</Text>
             </Pressable>
