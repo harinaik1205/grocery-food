@@ -104,14 +104,17 @@ const styles = StyleSheet.create({
     width: '95%',
     height: 68,
     borderRadius: 34,
-    backgroundColor: COLORS.white,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowColor: '#330D05',
-    elevation: 8,
-    paddingHorizontal: 8,
+    borderWidth: 0.5,
+
+    borderColor: COLORS.border,
+    backgroundColor: '#FFFFFF80',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 8,
+    // },
+    // shadowColor: '#330D05',
+    // elevation: 8,
+    paddingHorizontal: 5,
   },
   tabContainer: {
     flexDirection: 'row',

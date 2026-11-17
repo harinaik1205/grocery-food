@@ -19,6 +19,7 @@
 		21BEEFF61D794046A4CCD7E1 /* PlusJakartaSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB9FCA9269EF48C4BDCE4437 /* PlusJakartaSans-Medium.ttf */; };
 		9AC9EEED21FE4DD5A562017D /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD89AB75BE184149BABAEC64 /* PlusJakartaSans-Regular.ttf */; };
 		E758FB9594A5431D97B4C8EB /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EAE8B22430F48978B3C62C1 /* PlusJakartaSans-SemiBold.ttf */; };
+		2259FC75A9EA4A0DA044065E /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F0A0E59E5BAB416B9E12B4C5 /* Config.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		BB9FCA9269EF48C4BDCE4437 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; name = "PlusJakartaSans-Medium.ttf"; path = "../src/assets/fonts/PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		FD89AB75BE184149BABAEC64 /* PlusJakartaSans-Regular.ttf */ = {isa = PBXFileReference; name = "PlusJakartaSans-Regular.ttf"; path = "../src/assets/fonts/PlusJakartaSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		8EAE8B22430F48978B3C62C1 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "PlusJakartaSans-SemiBold.ttf"; path = "../src/assets/fonts/PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F0A0E59E5BAB416B9E12B4C5 /* Config.xcconfig */ = {isa = PBXFileReference; name = "Config.xcconfig"; path = "Config.xcconfig"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.xcconfig; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				F0A0E59E5BAB416B9E12B4C5 /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* GroceryFood */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -190,6 +193,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2259FC75A9EA4A0DA044065E /* Config.xcconfig in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E5B6853CD084FEDBBAC6096 /* PlusJakartaSans-Bold.ttf in Resources */,
@@ -422,6 +426,7 @@
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
+			baseConfigurationReference = F0A0E59E5BAB416B9E12B4C5 /* Config.xcconfig */;
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -488,6 +493,7 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
+			baseConfigurationReference = F0A0E59E5BAB416B9E12B4C5 /* Config.xcconfig */;
 		};
 /* End XCBuildConfiguration section */
 

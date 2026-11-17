@@ -19,39 +19,31 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithPhoneNumber,
+  GoogleAuthProvider,
+  signInWithCredential,
 } from '@react-native-firebase/auth';
 import { mmkvStorage } from '../../../shared/utils/storage';
 import { useAppDispatch } from '../../../store/hooks';
-// import { setConfirmation } from '../store/authSlice';
+import {
+  GoogleOneTapSignIn,
+  isNoSavedCredentialFoundResponse,
+  isSuccessResponse,
+} from 'react-native-nitro-google-signin';
+import Config from 'react-native-config';
+
+GoogleOneTapSignIn.configure({
+  webClientId: Config.WEB_CLIENT_ID!,
+});
 
 const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isSendingOtp, setIsSendingOtp] = useState<boolean>(false);
-  // const [confirm, setConfirm] = useState<ConfirmationResult | null>(null);
-
-  const dispatch = useAppDispatch();
-
-  // useEffect(() => {
-  //   const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
-  //   return subscriber;
-  // }, []);
 
   useEffect(() => {
     if (phoneNumber.length === 10) {
       Keyboard.dismiss();
     }
   }, [phoneNumber]);
-
-  // function handleAuthStateChanged(user: any) {
-  //   if (user) {
-  //     mmkvStorage.setItem('user', JSON.stringify(user));
-  //     replace('vertical');
-  //     console.log('auth state changed');
-  //     // Some Android devices auto-retrieve the SMS code and complete sign-in
-  //     // without the user typing it. Hide the code UI and navigate away when
-  //     // this fires; entering the same code again will fail because it was used.
-  //   }
-  // }
 
   async function handleSignInWithPhoneNumber() {
     if (!phoneNumber || phoneNumber.length !== 10) return;
@@ -76,9 +68,31 @@ const LoginScreen = () => {
     setPhoneNumber(text);
   };
 
-  // const handleContinue = () => {
+  async function onGoogleButtonPress() {
+    try {
+      await GoogleOneTapSignIn.checkPlayServices();
+      let response = await GoogleOneTapSignIn.signIn();
+      if (isNoSavedCredentialFoundResponse(response)) {
+        response = await GoogleOneTapSignIn.createAccount();
+      }
+      if (isNoSavedCredentialFoundResponse(response)) {
+        response = await GoogleOneTapSignIn.presentExplicitSignIn();
+      }
+      if (!isSuccessResponse(response)) {
+        throw new Error('Google Sign-In was cancelled or failed');
+      }
+      const idToken = response.data?.idToken;
 
-  // };
+      if (!idToken) {
+        throw new Error('No ID token found');
+      }
+
+      const googleCredential = GoogleAuthProvider.credential(idToken);
+      return signInWithCredential(getAuth(), googleCredential);
+    } catch (error) {
+      console.log('google signin error', error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -164,7 +178,10 @@ const LoginScreen = () => {
             <Text style={styles.hrText}>or</Text>
             <View style={styles.hrLine} />
           </View>
-          <TouchableOpacity style={[styles.button, styles.hollowButton]}>
+          <TouchableOpacity
+            onPress={onGoogleButtonPress}
+            style={[styles.button, styles.hollowButton]}
+          >
             <Image source={require('../../../assets/images/google-logo.png')} />
             <Text style={styles.hollowButtonText}>Continue with Google</Text>
           </TouchableOpacity>
