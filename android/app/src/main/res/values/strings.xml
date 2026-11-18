@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">GroceryFood</string>
+    <string name="app_name">Zesta</string>
+    <string name="facebook_app_id">1145705401276010</string>
+    <string name="facebook_client_token">5652645ef951de10be34de1420a9646d</string>
 </resources>

@@ -13,7 +13,11 @@ import { COLORS } from '../../../shared/utils/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LucideIcon from '@react-native-vector-icons/lucide';
 import Chip from '../components/Chip';
-import { navigate, replace } from '../../../shared/utils/navigation';
+import {
+  navigate,
+  replace,
+  resetAndNavigate,
+} from '../../../shared/utils/navigation';
 import {
   ConfirmationResult,
   getAuth,
@@ -21,6 +25,7 @@ import {
   signInWithPhoneNumber,
   GoogleAuthProvider,
   signInWithCredential,
+  FacebookAuthProvider,
 } from '@react-native-firebase/auth';
 import { mmkvStorage } from '../../../shared/utils/storage';
 import { useAppDispatch } from '../../../store/hooks';
@@ -30,6 +35,7 @@ import {
   isSuccessResponse,
 } from 'react-native-nitro-google-signin';
 import Config from 'react-native-config';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 
 GoogleOneTapSignIn.configure({
   webClientId: Config.WEB_CLIENT_ID!,
@@ -38,6 +44,8 @@ GoogleOneTapSignIn.configure({
 const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [isSendingOtp, setIsSendingOtp] = useState<boolean>(false);
+  const [isGoogleAuthLoading, setIsGoogleAuthLoading] = useState(false);
+  const [isFacebookAuthLoading, setIsFacebookAuthLoading] = useState(false);
 
   useEffect(() => {
     if (phoneNumber.length === 10) {
@@ -69,6 +77,7 @@ const LoginScreen = () => {
   };
 
   async function onGoogleButtonPress() {
+    setIsGoogleAuthLoading(true);
     try {
       await GoogleOneTapSignIn.checkPlayServices();
       let response = await GoogleOneTapSignIn.signIn();
@@ -88,9 +97,37 @@ const LoginScreen = () => {
       }
 
       const googleCredential = GoogleAuthProvider.credential(idToken);
-      return signInWithCredential(getAuth(), googleCredential);
+      await signInWithCredential(getAuth(), googleCredential);
     } catch (error) {
       console.log('google signin error', error);
+    } finally {
+      setIsGoogleAuthLoading(false);
+    }
+  }
+
+  async function onFacebookButtonPress() {
+    setIsFacebookAuthLoading(true);
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      if (result.isCancelled) {
+        throw new Error('User cancelled the login process');
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        throw new Error('Something went wrong obtaining access token');
+      }
+      const facebookCredential = FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+      await signInWithCredential(getAuth(), facebookCredential);
+      // resetAndNavigate('vertical');
+    } catch (error) {
+      console.log('facebook signin error', error);
+    } finally {
+      setIsFacebookAuthLoading(false);
     }
   }
 
@@ -160,6 +197,7 @@ const LoginScreen = () => {
               cursorColor={COLORS.brand}
               onChangeText={handleChange}
               placeholderTextColor={COLORS.muted}
+              // autoFocus
             />
           </View>
           <TouchableOpacity
@@ -182,14 +220,35 @@ const LoginScreen = () => {
             onPress={onGoogleButtonPress}
             style={[styles.button, styles.hollowButton]}
           >
-            <Image source={require('../../../assets/images/google-logo.png')} />
-            <Text style={styles.hollowButtonText}>Continue with Google</Text>
+            {isGoogleAuthLoading ? (
+              <ActivityIndicator size={'small'} color={COLORS.brand} />
+            ) : (
+              <>
+                <Image
+                  source={require('../../../assets/images/google-logo.png')}
+                />
+                <Text style={styles.hollowButtonText}>
+                  Continue with Google
+                </Text>
+              </>
+            )}
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.hollowButton]}>
-            <Image
-              source={require('../../../assets/images/facebook-logo.png')}
-            />
-            <Text style={styles.hollowButtonText}>Continue with Facebook</Text>
+          <TouchableOpacity
+            onPress={onFacebookButtonPress}
+            style={[styles.button, styles.hollowButton]}
+          >
+            {isFacebookAuthLoading ? (
+              <ActivityIndicator size={'small'} color={COLORS.brand} />
+            ) : (
+              <>
+                <Image
+                  source={require('../../../assets/images/facebook-logo.png')}
+                />
+                <Text style={styles.hollowButtonText}>
+                  Continue with Facebook
+                </Text>
+              </>
+            )}
           </TouchableOpacity>
         </View>
       </SafeAreaView>

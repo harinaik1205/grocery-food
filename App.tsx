@@ -21,11 +21,12 @@ import {
 import { Provider } from 'react-redux';
 import { store } from './src/store';
 import { mmkvStorage } from './src/shared/utils/storage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
@@ -35,7 +36,7 @@ function App() {
   function handleAuthStateChanged(user: any) {
     if (user) {
       mmkvStorage.setItem('user', JSON.stringify(user));
-      replace('vertical');
+      resetAndNavigate('vertical');
       console.log('auth state changed');
       // Some Android devices auto-retrieve the SMS code and complete sign-in
       // without the user typing it. Hide the code UI and navigate away when
@@ -45,8 +46,10 @@ function App() {
       mmkvStorage.removeItem('user');
       resetAndNavigate('login');
     }
+    setInitializing(false);
   }
 
+  if (initializing) return null;
   return (
     <NavigationContainer ref={navigationRef}>
       <SafeAreaProvider>
