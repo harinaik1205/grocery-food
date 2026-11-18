@@ -21,3 +21,12 @@ export const FONTS = {
   regular: 'PlusJakartaSans-Regular',
   semiBold: 'PlusJakartaSans-SemiBold',
 };
+
+export const banners = [
+  require('../../assets/images/Banner 1 — Fresh produce.png'),
+  require('../../assets/images/Banner 2 — Breakfast.png'),
+  require('../../assets/images/Banner 3 — First order coupon.png'),
+  require('../../assets/images/Banner 4 — Snacks & drinks.png'),
+  require('../../assets/images/Banner 5 — Food cross-sell.png'),
+  require('../../assets/images/Banner 6 — Pantry staples.png'),
+];

@@ -26,6 +26,7 @@ import AnimatedHeader from '../../../../shared/components/AnimatedHeader';
 import { COLORS } from '../../../../shared/utils/constants';
 
 import Config from 'react-native-config';
+import CustomCarousel from '../../../../shared/components/carousel/CustomCarousel';
 
 const GroceryHomeScreen = () => {
   const scrollY = useSharedValue(0);
@@ -46,12 +47,13 @@ const GroceryHomeScreen = () => {
         contentContainerStyle={{
           paddingBottom: 50,
           paddingTop: headerHeight,
+          backgroundColor: '#E7DED6',
         }}
         onScroll={onScroll}
         scrollEventThrottle={16}
       >
-        <Text>{Config.WEB_CLIENT_ID}</Text>
-        <Text>{user}</Text>
+        <CustomCarousel />
+
         <Button
           title="Logout"
           onPress={() => {
