@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { COLORS } from '../../../shared/utils/constants';
+import { COLORS, FONTS } from '../../../shared/utils/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LucideIcon from '@react-native-vector-icons/lucide';
 import Chip from '../components/Chip';
@@ -176,6 +176,14 @@ const LoginScreen = () => {
           </View>
           <View style={styles.topShadow} />
           <View style={styles.bottomShadow} />
+          <TouchableOpacity
+            style={styles.skipBtn}
+            onPress={() => {
+              resetAndNavigate('vertical');
+            }}
+          >
+            <Text style={styles.skipText}>Skip</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.bottomContainer}>
@@ -403,5 +411,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'PlusJakartaSans-Regular',
     color: COLORS.muted,
+  },
+  skipBtn: {
+    position: 'absolute',
+    top: 0,
+    right: 50,
+    zIndex: 10,
+  },
+  skipText: {
+    fontSize: 15,
+    fontFamily: FONTS.semiBold,
+    color: COLORS.white,
   },
 });

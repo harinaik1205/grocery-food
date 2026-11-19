@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
     width: '95%',
     height: 194,
     alignSelf: 'center',
-    objectFit: 'cover',
+    objectFit: 'contain',
   },
 });
