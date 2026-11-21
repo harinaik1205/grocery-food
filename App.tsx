@@ -23,6 +23,8 @@ import { store } from './src/store';
 import { mmkvStorage } from './src/shared/utils/storage';
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
+import AppWrapper from './src/shared/components/no-internet/AppWrapper';
+import NoInternet from './src/shared/components/no-internet/NoInternet';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -55,8 +57,12 @@ function App() {
       <SafeAreaProvider>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         {/* <AppContent /> */}
+
         <Provider store={store}>
-          <RootStack />
+          <AppWrapper>
+            <RootStack />
+          </AppWrapper>
+          {/* <NoInternet /> */}
         </Provider>
       </SafeAreaProvider>
     </NavigationContainer>
