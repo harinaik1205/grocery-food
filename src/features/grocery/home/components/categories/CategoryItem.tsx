@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   categoryName: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: FONTS.semiBold,
     color: COLORS.ink,
     textAlign: 'center',

@@ -23,11 +23,17 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import AnimatedHeader from '../../../../shared/components/AnimatedHeader';
-import { categories, COLORS, FONTS } from '../../../../shared/utils/constants';
+import {
+  categories,
+  COLORS,
+  FONTS,
+  productsList,
+} from '../../../../shared/utils/constants';
 
 import Config from 'react-native-config';
 import CustomCarousel from '../../../../shared/components/carousel/CustomCarousel';
 import CategoriesList from '../components/categories/CategoriesList';
+import ProductsList from '../components/prodcuts/ProductsList';
 
 const GroceryHomeScreen = () => {
   const scrollY = useSharedValue(0);
@@ -49,13 +55,18 @@ const GroceryHomeScreen = () => {
           paddingBottom: 100,
           paddingTop: headerHeight,
 
-          backgroundColor: '#E7DED6',
+          // backgroundColor: '#E7DED6',
+          backgroundColor: '#EDE3DB',
         }}
         onScroll={onScroll}
         scrollEventThrottle={16}
       >
         <CustomCarousel />
         <View style={{ paddingHorizontal: 16 }}>
+          <View>
+            <Text style={styles.popularNearYouText}>Popular near you</Text>
+            <ProductsList products={productsList} />
+          </View>
           <CategoriesList categories={categories} label="Grocery & Kitchen" />
           <CategoriesList categories={categories} label="Snacks & Drinks" />
           <CategoriesList
@@ -92,5 +103,11 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
     color: '#9C928B',
     textAlign: 'center',
+  },
+  popularNearYouText: {
+    color: COLORS.ink,
+    fontSize: 18,
+    fontFamily: FONTS.extraBold,
+    paddingBottom: 10,
   },
 });
