@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Header from '../../../shared/components/Header';
 import { useInternetAvailability } from '../../../shared/hooks/useInternetAvailability';
@@ -12,6 +12,7 @@ const RestaurantNavigation = () => {
   return (
     <View>
       <Header />
+
       <Text>{isConnected ? 'Online' : 'Offline'}</Text>
       <PrimaryButton label="Try again" onPress={recheckConnection} />
     </View>

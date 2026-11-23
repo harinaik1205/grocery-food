@@ -63,16 +63,16 @@ const GroceryHomeScreen = () => {
       >
         <CustomCarousel />
         <View style={{ paddingHorizontal: 16 }}>
-          <View>
+          {/* <View>
             <Text style={styles.popularNearYouText}>Popular near you</Text>
             <ProductsList products={productsList} />
-          </View>
+          </View> */}
           <CategoriesList categories={categories} label="Grocery & Kitchen" />
-          <CategoriesList categories={categories} label="Snacks & Drinks" />
+          {/* <CategoriesList categories={categories} label="Snacks & Drinks" />
           <CategoriesList
             categories={categories}
             label="Beauty & Personal Care"
-          />
+          /> */}
         </View>
 
         <View

@@ -77,6 +77,100 @@ export const categories = [
   },
 ];
 
+export const categoriesData = [
+  {
+    title: 'Grocery & Kitchen',
+    data: [
+      {
+        name: 'Vegetables & Fruits',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_V7_312x360_1776063046796',
+      },
+      {
+        name: 'Atta, Rice & Dal',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_atta,_rice_&_dal_1697023078302',
+      },
+      {
+        name: 'Oil, Ghee & Masala',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Oil,_ghee_&_masala_1697023177309',
+      },
+      {
+        name: 'Dairy & Bread',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Dairy,_bread_&_eggs_1697439479199',
+      },
+      {
+        name: 'Bakery & Biscuits',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Biscuits_&_bakery_1697023878012',
+      },
+      {
+        name: 'Dry Fruits & Cereals',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Dry_Fruits_&_Cereals_(1)_1727547591238',
+      },
+      {
+        name: 'Chicken, Meat & Fish',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_chicken,_meat_&_fish_1697025365538',
+      },
+      {
+        name: 'Kitchenware & Appliances',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Kitchen_Utensils_&_1697802997422',
+      },
+    ],
+  },
+
+  {
+    title: 'Snacks & Drinks',
+    data: [
+      {
+        name: 'Chips & Namkeen',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_V1_0_1782816119615',
+      },
+      {
+        name: 'Sweets & Chocolates',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Sweets_&_chocolates_1697025717829',
+      },
+      {
+        name: 'Drinks & Juices',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_V7_312x360_(2)_1774455548692',
+      },
+      {
+        name: 'Tea, Coffee & Milk Drinks',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_L0_v1_0_1746557294148',
+      },
+      {
+        name: 'Instant Food',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Instant_Food_(2)_1766127254031',
+      },
+      {
+        name: 'Sauces & Spreads',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_sauces_&_spreads_1697025783179',
+      },
+      {
+        name: 'Paan Corner',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_312x360_(1)_1750440200815',
+      },
+      {
+        name: 'Ice Creams & More',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_V7_312x360_(1)_1763118369111',
+      },
+    ],
+  },
+];
+
 export const productsList: ProductItemType[] = [
   {
     id: 1,

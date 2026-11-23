@@ -5,7 +5,7 @@ import ScalePress from '../../../../../shared/components/ScalePress';
 
 interface CategoryItemProps {
   category: {
-    id: number;
+    // id?: number;
     name: string;
     image: any;
   };
@@ -15,7 +15,12 @@ const CategoryItem: FC<CategoryItemProps> = ({ category }) => {
   return (
     <ScalePress style={styles.container}>
       <View style={styles.imgContainer}>
-        <Image source={category.image} style={styles.img} />
+        <Image
+          source={{
+            uri: category.image,
+          }}
+          style={styles.img}
+        />
       </View>
       <Text style={styles.categoryName}>{category.name}</Text>
     </ScalePress>
@@ -28,6 +33,7 @@ const styles = StyleSheet.create({
   container: {
     width: '23%',
     alignItems: 'center',
+    marginBottom: 10,
   },
   imgContainer: {
     width: '100%',
