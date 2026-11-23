@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    // margin: 12,
   },
   content: {
     padding: 10,

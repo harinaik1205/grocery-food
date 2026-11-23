@@ -12,13 +12,13 @@ interface AppWrapperPropsType {
 }
 
 const AppWrapper: FC<AppWrapperPropsType> = ({ children }) => {
-  const [type, setType] = useState<string | null>(null);
+  // const [type, setType] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
       const unsubscribe = addEventListener(state => {
-        setType(state.type);
+        // setType(state.type);
         setIsConnected(state.isConnected ?? false);
       });
 
