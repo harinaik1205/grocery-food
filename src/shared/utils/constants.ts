@@ -169,6 +169,77 @@ export const categoriesData = [
       },
     ],
   },
+
+  {
+    title: 'Beauty & Personal Care',
+    data: [
+      {
+        name: 'Bath & Body',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Bath_&_Body_1697028879274',
+      },
+      {
+        name: 'Hair',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Hair_1697025936187',
+      },
+      {
+        name: 'Skin & Face',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Skin_&_face_(1)_1710665369044',
+      },
+      {
+        name: 'Beauty & Cosmetics',
+        image:
+          'http://cdn.grofers.com/app/images/collections/asset_Beauty_&_Cosmetics_1714732446632',
+      },
+      {
+        name: 'Feminine Hygiene',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Feminine_hygiene_1697028415717',
+      },
+      {
+        name: 'Baby Care',
+        image:
+          'http://cdn.grofers.com/app/images/collections/asset_V7_312x360_1778246752991',
+      },
+      {
+        name: 'Health & Pharma',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Health_&_pharma_1697028551531',
+      },
+      {
+        name: 'Sexual Wellness',
+        image:
+          'http://cdn.grofers.com/app/images/collections/asset_Sexual_wellness_1697028588156',
+      },
+    ],
+  },
+  {
+    title: 'Household Essentials',
+    data: [
+      {
+        name: 'Home & Lifestyle',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_312x360_(2)_1752670450422',
+      },
+      {
+        name: 'Cleaners & Repellents',
+        image:
+          'https://cdn.grofers.com/app/images/collections/asset_Cleaning_&_repellants-3_1711101791295',
+      },
+      {
+        name: 'Electronics',
+        image:
+          'http://cdn.grofers.com/app/images/collections/asset_Electronics_1697028762316',
+      },
+      {
+        name: 'Stationery & Games',
+        image:
+          'http://cdn.grofers.com/app/images/collections/asset_Stationery_&_Games_1698999971211',
+      },
+    ],
+  },
 ];
 
 export const productsList: ProductItemType[] = [
