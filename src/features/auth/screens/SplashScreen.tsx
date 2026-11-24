@@ -54,7 +54,7 @@ const SplashScreen = () => {
     }, 1500);
 
     return () => clearTimeout(timerId);
-  }, []);
+  }, [userData]);
 
   return (
     <View style={styles.container}>

@@ -49,6 +49,7 @@ const GroceryHomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       {/* <Header /> */}
+      <StatusBar barStyle="light-content" />
       <AnimatedHeader scrollY={scrollY} onHeightChange={setHeaderHeight} />
       <Animated.ScrollView
         contentContainerStyle={{
@@ -74,6 +75,8 @@ const GroceryHomeScreen = () => {
             label="Beauty & Personal Care"
           /> */}
         </View>
+
+        {user && <Button title="Logout" onPress={() => signOut(auth)} />}
 
         <View
           style={{

@@ -10,6 +10,7 @@ const NoInternet = () => {
         <Image
           source={require('../../../assets/images/no-internet.png')}
           style={styles.img}
+          alt="No Internet Image"
         />
       </View>
       <Text style={styles.text}>No internet connection</Text>

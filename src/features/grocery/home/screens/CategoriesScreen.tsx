@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import CategoriesList from '../components/categories/CategoriesList';
 import { categories, COLORS, FONTS } from '../../../../shared/utils/constants';
@@ -9,6 +9,7 @@ const CategoriesScreen = () => {
   const insets = useSafeAreaInsets();
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" />
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.flexRowBetween}>
           <Text style={styles.headerTitle}>Categories</Text>
