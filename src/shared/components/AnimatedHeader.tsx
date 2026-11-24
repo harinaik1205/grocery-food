@@ -3,6 +3,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  useColorScheme,
   View,
 } from 'react-native';
 import React from 'react';
@@ -20,6 +21,8 @@ import VerticalTabs from './VerticalTabs';
 
 import Lucide from '@react-native-vector-icons/lucide';
 import SearchBar from './SearchBar';
+import { useColorTheme } from '../hooks/useColorTheme';
+import { useAppSelector } from '../../store/hooks';
 
 const HEADER_BG = '#A82A12';
 
@@ -42,6 +45,8 @@ const Header = ({
 }: HeaderProps) => {
   const insets = useSafeAreaInsets();
   const topInset = insets.top;
+  const colors = useColorTheme();
+  const { currentVertical } = useAppSelector(state => state.app);
 
   // Height of the part that slides away: tabs + delivery row.
   const collapseHeight = useSharedValue(0);
@@ -95,26 +100,55 @@ const Header = ({
     <View pointerEvents="box-none" style={styles.overlay}>
       <Animated.View
         onLayout={onContainerLayout}
-        style={[styles.header, { paddingTop: insets.top }, containerStyle]}
+        style={[
+          styles.header,
+          { paddingTop: insets.top, backgroundColor: colors.brandDark },
+          containerStyle,
+        ]}
       >
         <Animated.View onLayout={onContentLayout} style={contentStyle}>
           <VerticalTabs />
-          <View style={styles.headerBody}>
+          <View style={{ backgroundColor: colors.brand }}>
             <View style={[styles.flexRow, styles.deliveryRow]}>
               <View>
-                <Text style={styles.deliveryInText}>Delivery in</Text>
-                <Text style={styles.deliveryMinsText}>12 min</Text>
-                <View style={styles.flexRow}>
-                  <Text style={styles.location}>Home Madhapur, Hyderabad</Text>
-                </View>
+                {currentVertical === 'grocery' ? (
+                  <>
+                    <Text style={styles.deliveryInText}>Delivery in</Text>
+                    <Text style={styles.deliveryMinsText}>12 min</Text>
+                    <Text style={styles.location}>
+                      Home Madhapur, Hyderabad
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <View style={styles.flexRow}>
+                      <Text
+                        style={[
+                          styles.currentLocationText,
+                          { color: colors.white },
+                        ]}
+                      >
+                        Current Location
+                      </Text>
+                      <Lucide
+                        name="chevron-down"
+                        size={15}
+                        color={colors.white}
+                      />
+                    </View>
+                    <Text style={styles.location}>
+                      Home Madhapur, Hyderabad
+                    </Text>
+                  </>
+                )}
               </View>
               <View style={[styles.flexRow, { gap: 16 }]}>
                 <Pressable style={styles.walletContainer}>
-                  <Lucide name="wallet" size={20} color={COLORS.brand} />
+                  <Lucide name="wallet" size={20} color={colors.brand} />
                   <Text style={styles.walletBalance}>₹0</Text>
                 </Pressable>
                 <Pressable style={styles.profileIcon}>
-                  <Lucide name="user-round" size={22} color={COLORS.brand} />
+                  <Lucide name="user-round" size={22} color={colors.brand} />
                 </Pressable>
               </View>
             </View>
@@ -122,7 +156,14 @@ const Header = ({
         </Animated.View>
 
         {/* Always visible */}
-        <SearchBar progress={progress} />
+        <SearchBar
+          progress={progress}
+          words={
+            currentVertical === 'restaurant'
+              ? ['biryani', 'pizza', 'chicken', 'burger']
+              : ['Milk', 'Chips', 'Bread', 'Eggs']
+          }
+        />
       </Animated.View>
     </View>
   );
@@ -142,7 +183,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: HEADER_BG,
   },
   headerBody: {
     backgroundColor: COLORS.brand,
@@ -169,6 +209,11 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 13,
     fontFamily: FONTS.semiBold,
+  },
+  currentLocationText: {
+    fontSize: 16,
+    fontFamily: FONTS.semiBold,
+    // paddingRight: 2,
   },
   profileIcon: {
     width: 44,

@@ -1,8 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { COLORS, FONTS } from '../utils/constants';
+import { FONTS } from '../utils/constants';
 
 import LucideIcon from '@react-native-vector-icons/lucide';
+import { useColorTheme } from '../hooks/useColorTheme';
 
 interface VerticalItemProps {
   label: string;
@@ -17,18 +18,29 @@ const VerticalTabItem: React.FC<VerticalItemProps> = ({
   onPress,
   isActive,
 }) => {
+  const colors = useColorTheme();
   return (
-    <View style={styles.tabItemContainer}>
+    <View
+      style={[styles.tabItemContainer, { backgroundColor: colors.brandDark }]}
+    >
       <Pressable
         onPress={onPress}
-        style={[styles.tabItem, isActive && styles.tabItemActive]}
+        style={[
+          styles.tabItem,
+          isActive && styles.tabItemActive,
+          {
+            backgroundColor: isActive ? colors.brand : colors.white,
+          },
+        ]}
       >
         <LucideIcon
           name={iconName}
           size={22}
-          color={isActive ? COLORS.white : COLORS.brand}
+          color={isActive ? colors.white : colors.brand}
         />
-        <Text style={[styles.label, isActive && { color: '#ffff' }]}>
+        <Text
+          style={[styles.label, { color: isActive ? '#ffff' : colors.brand }]}
+        >
           {label}
         </Text>
       </Pressable>
@@ -42,19 +54,17 @@ const styles = StyleSheet.create({
   tabItemContainer: {
     flex: 1,
     height: 52,
-    backgroundColor: '#A82A12',
   },
   tabItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     height: 44,
-    backgroundColor: COLORS.white,
+
     borderRadius: 14,
     gap: 8,
   },
   tabItemActive: {
-    backgroundColor: COLORS.brand,
     borderRadius: 0,
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
@@ -63,6 +73,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 17,
     fontFamily: FONTS.extraBold,
-    color: COLORS.brand,
+    // color: COLORS.brand,
   },
 });

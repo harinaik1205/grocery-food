@@ -18,6 +18,7 @@ import Reanimated, {
 } from 'react-native-reanimated';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { COLORS, FONTS } from '../utils/constants';
+import { useColorTheme } from '../hooks/useColorTheme';
 
 type SearchBarProps = {
   /** Static hint text shown inside the bar. */
@@ -41,10 +42,6 @@ const WORD_CHANGE_INTERVAL_MS = 3000; // a new word starts to appear every 3s
 const TRANSITION_MS = 250; // duration of each phase (exit, then enter)
 const SLIDE_DISTANCE = 12;
 
-// Wrapper background: expanded header -> collapsed header.
-const WRAP_BG_EXPANDED = '#D93417';
-const WRAP_BG_COLLAPSED = '#A82A12'; // white at 50% opacity
-
 const SearchBar = ({
   prefix = 'Search',
   words = DEFAULT_WORDS,
@@ -54,6 +51,7 @@ const SearchBar = ({
   progress,
 }: SearchBarProps) => {
   const [index, setIndex] = useState(0);
+  const colors = useColorTheme();
 
   // Fallback so the hook below is always called with a shared value.
   const idle = useSharedValue(0);
@@ -63,10 +61,10 @@ const SearchBar = ({
     backgroundColor: interpolateColor(
       collapse.value,
       [0, 1],
-      [WRAP_BG_EXPANDED, WRAP_BG_COLLAPSED],
+      [colors.brand, colors.brandDark],
     ),
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   }));
 
   // 0  = word resting in place (visible)
