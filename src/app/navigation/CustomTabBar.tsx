@@ -26,9 +26,14 @@ const ICONS_NAME: {
 export const CustomTabBar = (props: BottomTabBarProps) => {
   const { state, navigation } = props;
   const COLORS = useColorTheme();
+  const { currentVertical } = useAppSelector(state => state.app);
 
   const handlePress = (route: string) => {
-    navigation.navigate(route);
+    // navigation.navigate(route);
+    navigation.navigate(
+      currentVertical === 'grocery' ? 'GroceryTabs' : 'FoodTabs',
+      { screen: route },
+    );
   };
 
   return (

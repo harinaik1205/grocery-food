@@ -2,6 +2,8 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { FC } from 'react';
 import { COLORS, FONTS } from '../../../../../shared/utils/constants';
 import ScalePress from '../../../../../shared/components/ScalePress';
+import { navigate } from '../../../../../shared/utils/navigation';
+import { GROCERY_ROUTES } from '../../../../../app/navigation/grocery/routes';
 
 interface CategoryItemProps {
   category: {
@@ -13,7 +15,12 @@ interface CategoryItemProps {
 
 const CategoryItem: FC<CategoryItemProps> = ({ category }) => {
   return (
-    <ScalePress style={styles.container}>
+    <ScalePress
+      onPress={() => {
+        navigate(GROCERY_ROUTES.PRODUCT_CATEGORIES_SCREEN);
+      }}
+      style={styles.container}
+    >
       <View style={styles.imgContainer}>
         <Image
           source={{

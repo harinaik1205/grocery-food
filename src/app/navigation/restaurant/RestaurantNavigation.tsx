@@ -12,9 +12,9 @@ const RestaurantNavigation = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="Tabs"
+      initialRouteName="FoodTabs"
     >
-      <Stack.Screen name="Tabs" component={TabNavigation} />
+      <Stack.Screen name="FoodTabs" component={TabNavigation} />
       {/* <Stack.Screen name="GroceryHome" component={GroceryHomeScreen} /> */}
     </Stack.Navigator>
   );

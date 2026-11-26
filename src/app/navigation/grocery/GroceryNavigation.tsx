@@ -3,6 +3,8 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import TabNavigation from './TabNavigation';
+import ProductCategories from '../../../features/grocery/explore/screens/ProductCategories';
+import { GROCERY_ROUTES } from './routes';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,10 +14,16 @@ const GroceryNavigation = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="Tabs"
+      initialRouteName="GroceryTabs"
     >
-      <Stack.Screen name="Tabs" component={TabNavigation} />
-      {/* <Stack.Screen name="GroceryHome" component={GroceryHomeScreen} /> */}
+      <Stack.Screen
+        name={GROCERY_ROUTES.GROCERY_TABS}
+        component={TabNavigation}
+      />
+      <Stack.Screen
+        name={GROCERY_ROUTES.PRODUCT_CATEGORIES_SCREEN}
+        component={ProductCategories}
+      />
     </Stack.Navigator>
   );
 };
