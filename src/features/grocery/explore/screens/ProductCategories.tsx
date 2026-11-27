@@ -10,8 +10,13 @@ import React from 'react';
 import { GROCERY_COLOR_THEM } from '../../../../shared/utils/theme';
 import Feather from '@react-native-vector-icons/feather';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { categories, FONTS } from '../../../../shared/utils/constants';
+import {
+  categories,
+  FONTS,
+  productsList,
+} from '../../../../shared/utils/constants';
 import SideBar from '../components/SideBar';
+import ProductList from '../components/ProductsList';
 
 const ProductCategories = () => {
   return (
@@ -19,7 +24,9 @@ const ProductCategories = () => {
       <Header />
       <View style={styles.content}>
         <SideBar />
-        <View style={{ flex: 1 }}></View>
+        {/* <View style={{ flex: 1 }}> */}
+        <ProductList products={productsList} />
+        {/* </View> */}
       </View>
     </View>
   );
@@ -89,6 +96,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   content: {
+    flex: 1,
     flexDirection: 'row',
   },
   header: {

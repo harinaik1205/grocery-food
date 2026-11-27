@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigation from './TabNavigation';
 import ProductCategories from '../../../features/grocery/explore/screens/ProductCategories';
 import { GROCERY_ROUTES } from './routes';
+import ProductDetails from '../../../features/grocery/explore/screens/ProductDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,10 @@ const GroceryNavigation = () => {
       <Stack.Screen
         name={GROCERY_ROUTES.PRODUCT_CATEGORIES_SCREEN}
         component={ProductCategories}
+      />
+      <Stack.Screen
+        name={GROCERY_ROUTES.PRODUCT_DETAILS_SCREEN}
+        component={ProductDetails}
       />
     </Stack.Navigator>
   );

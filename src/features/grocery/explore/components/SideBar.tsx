@@ -156,6 +156,7 @@ const SideBar = () => {
         contentContainerStyle={{
           paddingBottom: 100,
         }}
+        showsVerticalScrollIndicator={false}
       >
         <View>
           {categories.map((category, index) => {
@@ -189,9 +190,9 @@ const styles = StyleSheet.create({
   },
   categoryImgContainer: {
     borderRadius: 100,
-    height: 80,
+    height: 70,
     // marginBottom: 10,
-    width: 80,
+    width: 70,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F6F1EC',
