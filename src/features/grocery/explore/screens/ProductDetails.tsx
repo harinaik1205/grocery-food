@@ -2,7 +2,6 @@ import {
   ActivityIndicator,
   Alert,
   Button,
-  Dimensions,
   Image,
   Platform,
   Pressable,
@@ -15,41 +14,39 @@ import {
   View,
 } from 'react-native';
 import React, { Suspense, useEffect, useState } from 'react';
-// import { getProductDetails } from '@services/productServices';
-// import { Colors, images } from '@utils/Constants';
+
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import Feather from '@react-native-vector-icons/feather';
-
-import UniversalAdd from '../components/UniversalAdd';
-
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
+import { getProductDetails } from '../services/productServices';
 import { GROCERY_COLOR_THEM } from '../../../../shared/utils/theme';
-import { productsList } from '../../../../shared/utils/constants';
-import { ProductItemType } from '../../../../shared/types';
+import Feather from '@react-native-vector-icons/feather';
+import UniversalAdd from '../components/UniversalAdd';
+import { screenWidth } from '../../../../shared/utils/scaling';
+import { screenHeight } from '../components/ProductItem';
+import CategoryProducts from '../components/CategoryProducts';
 
-// interface ProductType {
-//   _id: string;
-//   name: string;
-//   image: string;
-//   price: number;
-//   discountPrice: number;
-//   quantity: string;
-//   category: {
-//     _id: string;
-//     name: string;
-//     image: string;
-//   };
-// }
+// const CategoryProducts = React.lazy(() => import('./CategoryProducts'));
+
+interface ProductType {
+  _id: string;
+  name: string;
+  image: string;
+  price: number;
+  discountPrice: number;
+  quantity: string;
+  category: {
+    _id: string;
+    name: string;
+    image: string;
+  };
+}
 
 const ProductDetails = ({ route }: any) => {
   const productId = route?.params?.productId;
-  // console.log({ productId });
   const insets = useSafeAreaInsets();
-  const [product, setProduct] = useState<ProductItemType>();
+  const [product, setProduct] = useState<ProductType>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState('');
@@ -58,22 +55,21 @@ const ProductDetails = ({ route }: any) => {
     fetchProductById();
   }, [productId]);
 
-  const fetchProductById = () => {
+  const fetchProductById = async () => {
     setLoading(true);
-
     try {
-      const product = productsList.find(product => product?.id === productId);
-      setProduct(product);
+      const response = await getProductDetails(productId);
+      console.log(response);
+      if (response?.success == false) {
+        setError(response?.message);
+      }
+      setProduct(response?.product);
     } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
-
-  /**
-   * This function share an image passed using the
-   * url param
-   */
 
   if (loading) {
     return (
@@ -90,7 +86,7 @@ const ProductDetails = ({ route }: any) => {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: '#f5f6fb' }}>
       <StatusBar barStyle="dark-content" />
 
       {/* content */}
@@ -106,10 +102,7 @@ const ProductDetails = ({ route }: any) => {
               <View style={styles.iconContainer}>
                 <Feather name="heart" size={20} />
               </View>
-              <TouchableOpacity
-                //    onPress={onShare}
-                style={styles.iconContainer}
-              >
+              <TouchableOpacity style={styles.iconContainer}>
                 <Feather name="share" size={20} />
               </TouchableOpacity>
             </View>
@@ -129,7 +122,7 @@ const ProductDetails = ({ route }: any) => {
                 </Text>
               </Text>
             </View>
-            {/* <View style={styles.category}>
+            <View style={styles.category}>
               <View style={styles.flexRowGap}>
                 <View style={styles.categoryImgContainer}>
                   <Image
@@ -138,20 +131,29 @@ const ProductDetails = ({ route }: any) => {
                   />
                 </View>
                 <View>
-                  <CustomText variant="h8" style={styles.categoryName}>
+                  <Text style={styles.categoryName}>
                     {product?.category?.name}
-                  </CustomText>
-                  <CustomText variant="h8" style={styles.explore}>
-                    Explore all products
-                  </CustomText>
+                  </Text>
+                  <Text style={styles.explore}>Explore all products</Text>
                 </View>
               </View>
               <Feather name="chevron-right" size={20} />
-            </View> */}
+            </View>
           </View>
         </View>
 
         {/* Top products in this category */}
+        <Suspense
+          fallback={
+            <ActivityIndicator
+              size={'large'}
+              color={GROCERY_COLOR_THEM.brand}
+            />
+          }
+        >
+          {/* seperate component for top products in this category can be added here, which will be lazy loaded. This will improve the performance of the ProductDetails screen by loading this section only when needed. */}
+          <CategoryProducts categoryId={product?.category?._id} />
+        </Suspense>
       </ScrollView>
 
       {/* action button */}
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#490D83',
+    backgroundColor: GROCERY_COLOR_THEM.leaf,
   },
   actionBtnText: {
     color: '#fff',
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   description: {
-    // color: Colors.disabled,
+    color: '#9197a6',
     fontWeight: 'semibold',
   },
   content: {
@@ -281,7 +283,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   discountPrice: {
-    // color: Colors.disabled,
+    color: '#9197a6',
     // textDecorationLine: 'line-through',
   },
 

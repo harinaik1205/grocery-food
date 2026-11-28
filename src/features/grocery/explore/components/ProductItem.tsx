@@ -9,15 +9,18 @@ import {
 import React, { FC } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import UniversalAdd from './UniversalAdd';
+import { GROCERY_COLOR_THEM } from '../../../../shared/utils/theme';
+import { COLORS, FONTS } from '../../../../shared/utils/constants';
 
 export const screenHeight: number = Dimensions.get('window').height;
 
 interface ProductItemsProps {
   item: any;
   index: number;
+  style?: any;
 }
 
-const ProductItem: FC<ProductItemsProps> = ({ item, index }) => {
+const ProductItem: FC<ProductItemsProps> = ({ item, index, style }) => {
   const isSecondColumn = index % 2 != 0;
   const navigation = useNavigation<any>();
 
@@ -30,7 +33,7 @@ const ProductItem: FC<ProductItemsProps> = ({ item, index }) => {
       }
       style={[styles.container, { marginRight: isSecondColumn ? 10 : 0 }]}
     >
-      <View style={styles.imageContainer}>
+      <View style={[styles.imageContainer, { ...style }]}>
         <Image source={{ uri: item?.image }} style={styles.image} />
       </View>
 
@@ -40,18 +43,37 @@ const ProductItem: FC<ProductItemsProps> = ({ item, index }) => {
             source={require('../../../../assets/icons/clock.png')}
             style={styles.clockIcon}
           />
-          <Text>16 MINS</Text>
+          <Text
+            style={{
+              fontSize: 10,
+              fontFamily: FONTS.medium,
+            }}
+          >
+            16 MINS
+          </Text>
         </View>
-        <Text numberOfLines={2} style={{ marginVertical: 4 }}>
+        <Text
+          numberOfLines={2}
+          style={{ marginVertical: 4, fontSize: 13, fontFamily: FONTS.medium }}
+        >
           {item?.name}
         </Text>
 
         <View style={styles.priceContainer}>
           <View>
-            <Text>₹{item?.price}</Text>
             <Text
               style={{
-                opacity: 0.8,
+                fontSize: 13,
+                fontFamily: FONTS.medium,
+              }}
+            >
+              ₹{item?.price}
+            </Text>
+            <Text
+              style={{
+                fontSize: 13,
+                fontFamily: FONTS.medium,
+                color: COLORS.muted,
                 textDecorationLine: 'line-through',
               }}
             >
@@ -75,6 +97,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
     overflow: 'hidden',
+    borderColor: '#f3f4f7',
+    borderWidth: 1,
   },
   imageContainer: {
     height: screenHeight * 0.14,
@@ -82,6 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
+    // backgroundColor: '#f3f4f7',
   },
   image: {
     height: '100%',

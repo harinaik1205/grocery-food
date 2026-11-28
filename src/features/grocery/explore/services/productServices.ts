@@ -1,0 +1,31 @@
+import axios from 'axios';
+import { BASE_URL } from '../../../../services/config';
+
+export const getAllCategories = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/categories`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+export const getProductsByCategoryId = async (id: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+export const getProductDetails = async (id: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/product/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

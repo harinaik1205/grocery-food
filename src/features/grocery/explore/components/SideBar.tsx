@@ -1,232 +1,177 @@
 import {
-  Image,
-  ImageSourcePropType,
-  LayoutChangeEvent,
-  Pressable,
+  ScrollView,
+  ScrollViewInstance,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import Animated, {
-  Easing,
-  interpolate,
-  interpolateColor,
-  scrollTo,
-  useAnimatedRef,
   useAnimatedStyle,
-  useDerivedValue,
-  useScrollViewOffset,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-
-import { categories, FONTS } from '../../../../shared/utils/constants';
+import { runOnJS } from 'react-native-worklets';
 import { GROCERY_COLOR_THEM } from '../../../../shared/utils/theme';
+import { FONTS } from '../../../../shared/utils/constants';
 
-// Blinkit-style active state colors (swap with your theme values if you have them)
-const ACTIVE_COLORS = {
-  accent: '#0C831F', // green bar on the right edge
-  itemBgInactive: 'rgba(232, 245, 233, 0)',
-  itemBgActive: 'rgba(232, 245, 233, 1)',
-  circleBgInactive: '#F6F1EC', // your original circle color
-  circleBgActive: '#D7EDDB',
-};
+interface SidebarProps {
+  categories: any;
+  selectedCategory: any;
+  onCategoryPress: (category: any) => void;
+}
 
-type CategoryItemProps = {
-  name: string;
-  image: ImageSourcePropType;
-  isActive: boolean;
-  onPress: () => void;
-  onLayout: (e: LayoutChangeEvent) => void;
-};
-
-const CategoryItem = ({
-  name,
-  image,
-  isActive,
-  onPress,
-  onLayout,
-}: CategoryItemProps) => {
-  // 0 = inactive, 1 = active
-  const progress = useSharedValue(isActive ? 1 : 0);
+const Sidebar: FC<SidebarProps> = ({
+  categories,
+  selectedCategory,
+  onCategoryPress,
+}) => {
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
+  const indicatorPosition = useSharedValue(0);
+  const animatedValues = categories?.map(() => useSharedValue(0));
 
   useEffect(() => {
-    progress.value = withTiming(isActive ? 1 : 0, {
-      duration: 250,
-      easing: Easing.out(Easing.cubic),
+    let targetIndex = -1;
+
+    categories?.forEach((category: any, index: number) => {
+      const isSelected = selectedCategory?._id === category?._id;
+      animatedValues[index].value = withTiming(isSelected ? 2 : -15, {
+        duration: 500,
+      });
+      if (isSelected) targetIndex = index;
     });
-  }, [isActive, progress]);
 
-  const itemBgStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      progress.value,
-      [0, 1],
-      [ACTIVE_COLORS.itemBgInactive, ACTIVE_COLORS.itemBgActive],
-    ),
+    if (targetIndex !== -1) {
+      indicatorPosition.value = withTiming(targetIndex * 119, {
+        duration: 500,
+      });
+      runOnJS(() => {
+        scrollViewRef.current?.scrollTo({
+          y: targetIndex * 119,
+          animated: true,
+        });
+      });
+    }
+  }, [selectedCategory]);
+
+  const indicatorStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: indicatorPosition.value }],
   }));
 
-  const barStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [{ scaleY: progress.value }],
-  }));
-
-  const circleStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      progress.value,
-      [0, 1],
-      [ACTIVE_COLORS.circleBgInactive, ACTIVE_COLORS.circleBgActive],
-    ),
-    transform: [{ scale: interpolate(progress.value, [0, 1], [1, 1.06]) }],
-  }));
-
-  const labelStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(progress.value, [0, 1], [0.65, 1]),
-  }));
+  // console.log('selectedCategory', selectedCategory);
 
   return (
-    <Pressable
-      style={styles.categoryContianer}
-      onLayout={onLayout}
-      onPress={onPress}
-    >
-      {/* Active background (sits behind the content, doesn't affect layout) */}
-      <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill]} />
-      {/* Active accent bar on the right edge */}
-      <Animated.View
-        pointerEvents="none"
-        style={[styles.activeBar, barStyle]}
-      />
-
-      <Animated.View style={[styles.categoryImgContainer, circleStyle]}>
-        <Image source={image} style={[styles.categoryImg]} />
-      </Animated.View>
-      <Animated.Text
-        style={[styles.categoryName, { fontFamily: FONTS.bold }, labelStyle]}
-      >
-        {name}
-      </Animated.Text>
-    </Pressable>
-  );
-};
-
-const SideBar = () => {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffset = useScrollViewOffset(scrollRef); // always knows the current scroll position
-  const targetY = useSharedValue(0);
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  // y-position of each category, measured via onLayout
-  const itemPositions = useRef<number[]>([]);
-  const contentHeight = useRef(0);
-  const viewHeight = useRef(0);
-
-  // Every time targetY changes (animated), scroll the ScrollView to that offset
-  useDerivedValue(() => {
-    scrollTo(scrollRef, 0, targetY.value, false);
-  });
-
-  const handleCategoryPress = (index: number) => {
-    setSelectedIndex(index);
-
-    const maxScroll = Math.max(contentHeight.current - viewHeight.current, 0);
-    const y = Math.min(
-      Math.max(itemPositions.current[index] ?? 0, 0),
-      maxScroll,
-    );
-
-    // start the animation from where the user currently is (in case they scrolled manually)
-    targetY.value = scrollOffset.value;
-    targetY.value = withTiming(y, {
-      duration: 400,
-      easing: Easing.out(Easing.cubic),
-    });
-  };
-
-  return (
-    <View style={styles.aside}>
-      <Animated.ScrollView
-        ref={scrollRef}
-        onLayout={(e: LayoutChangeEvent) => {
-          viewHeight.current = e.nativeEvent.layout.height;
-        }}
-        onContentSizeChange={(_, h) => {
-          contentHeight.current = h;
-        }}
-        contentContainerStyle={{
-          paddingBottom: 100,
-        }}
+    <View style={styles.sidebar}>
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={{ paddingBottom: 50, paddingTop: 10 }}
         showsVerticalScrollIndicator={false}
       >
-        <View>
-          {categories.map((category, index) => {
+        <Animated.View style={[styles.indicator, indicatorStyle]} />
+
+        <View style={{ gap: 20 }}>
+          {categories?.map((category: any, index: number) => {
+            const animatedStyle = useAnimatedStyle(() => ({
+              bottom: animatedValues[index].value,
+            }));
+
+            const isActive = selectedCategory?._id === category?._id;
+            console.log(isActive, selectedCategory?.name);
+
             return (
-              <CategoryItem
+              <TouchableOpacity
                 key={index}
-                name={category.name}
-                image={category.image}
-                isActive={index === selectedIndex}
-                onLayout={(e: LayoutChangeEvent) => {
-                  itemPositions.current[index] = e.nativeEvent.layout.y;
+                // activeOpacity={1}
+                style={styles.categoryBtn}
+                onPress={() => {
+                  console.log('category pressed', category);
+                  onCategoryPress(category);
                 }}
-                onPress={() => handleCategoryPress(index)}
-              />
+              >
+                <View
+                  style={[
+                    styles.imageContainer,
+                    isActive && styles.selectedImageContainer,
+                  ]}
+                >
+                  <Animated.Image
+                    source={{ uri: category?.image }}
+                    style={[styles.image, animatedStyle]}
+                  />
+                </View>
+                <Text
+                  style={[
+                    styles.categoryName,
+                    isActive && {
+                      fontFamily: FONTS.extraBold,
+                    },
+                  ]}
+                >
+                  {category?.name}
+                </Text>
+              </TouchableOpacity>
             );
           })}
         </View>
-      </Animated.ScrollView>
+      </ScrollView>
     </View>
   );
 };
 
-export default SideBar;
+export default Sidebar;
 
 const styles = StyleSheet.create({
-  categoryContianer: {
+  sidebar: {
+    width: '24%',
+    backgroundColor: '#fff',
+    borderRightWidth: 0.8,
+    borderRightColor: '#eee',
+    position: 'relative',
+  },
+  indicator: {
+    position: 'absolute',
+    right: 0,
+    width: 4,
+    height: 80,
+    top: 0,
+    alignSelf: 'center',
+    backgroundColor: GROCERY_COLOR_THEM.leaf,
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15,
+  },
+  categoryBtn: {
     padding: 10,
+    height: 100,
+    paddingVertical: 0,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    paddingBottom: 10,
   },
-  categoryImgContainer: {
+  image: {
+    width: '80%',
+    height: '80%',
+    resizeMode: 'contain',
+  },
+  imageContainer: {
     borderRadius: 100,
-    height: 70,
-    // marginBottom: 10,
-    width: 70,
+    height: '65%',
+    marginBottom: 10,
+    width: '75%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F6F1EC',
+    backgroundColor: '#f3f4f7',
+    overflow: 'hidden',
   },
-  categoryImg: {
-    width: 50,
-    height: 50,
-    // resizeMode: 'contain',
+  selectedImageContainer: {
+    backgroundColor: '#E3F4EA',
   },
   categoryName: {
     fontSize: 12,
     fontFamily: FONTS.regular,
     color: GROCERY_COLOR_THEM.ink,
     textAlign: 'center',
-  },
-  activeBar: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-    backgroundColor: ACTIVE_COLORS.accent,
-  },
-  aside: {
-    width: '24%',
-    backgroundColor: 'white',
-    shadowOffset: {
-      width: 1,
-      height: 0,
-    },
-    shadowColor: GROCERY_COLOR_THEM.ink,
-    elevation: 2,
-    paddingBottom: 50,
+    // paddingBottom: 50,
   },
 });

@@ -11,6 +11,8 @@ const ProductList: FC<ProductListProps> = ({ products }) => {
     return <ProductItem item={item} index={index} />;
   };
 
+  console.log('products', products);
+
   return (
     <FlatList
       data={products}
